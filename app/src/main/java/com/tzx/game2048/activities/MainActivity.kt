@@ -15,17 +15,19 @@ import com.tzx.game2048.R
 import it.gmariotti.recyclerview.itemanimator.SlideInOutLeftItemAnimator
 import java.util.*
 
-
+/*
+* 通过拿到的参去判断是否是经典模式,共用游戏规则
+* */
 class MainActivity : BaseActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var score:TextView
     private lateinit var  game: Game2048impl
+    var str= Arrays.asList("2","4","8","16","32","64","128","256","512","1024","2048")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         game= Game2048impl()
-        game.init()
-        var str= Arrays.asList("斗者","斗师","大斗师","斗灵","斗王","斗皇","斗宗","斗尊","斗圣","斗帝","斗神")
+        game.init(this)
         recyclerView=findViewById(R.id.recycleview)
         score=findViewById(R.id.score)
         val layoutManager: CustomGridManager =

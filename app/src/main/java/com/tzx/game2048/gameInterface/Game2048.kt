@@ -1,8 +1,10 @@
 package com.tzx.game2048.gameInterface
 
+import android.content.Context
+
 interface Game2048 {
-    fun init();
-    fun init(size:Int);
+    fun init(context:Context);
+    fun init(context:Context,size:Int);
     fun start();
     fun moveleft();
     fun moveright();

@@ -1,5 +1,12 @@
 package com.tzx.game2048.gameimpl;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+
+import com.tzx.game2048.R;
+import com.tzx.game2048.activities.MainActivity;
 import com.tzx.game2048.gameInterface.Game2048;
 
 import java.util.Random;
@@ -16,9 +23,11 @@ public class Game2048impl implements Game2048 {
     private int GAME_WIN=102;
     private int GAME_CONTINUE=103;
     private int state=GAME_CONTINUE;
+    private Context context;
     @Override
-    public void init(int size) {
+    public void init(Context context,int size) {
         MAPSIZE=size;
+        this.context=context;
         map=new int[MAPSIZE*MAPSIZE];
         isfirstAppear=new boolean[MAPSIZE*MAPSIZE];
         addRanrom();
@@ -34,7 +43,8 @@ public class Game2048impl implements Game2048 {
         GAME_OVER,GAME_CONTINUE,GAME_WIN
     };
     @Override
-    public void init() {
+    public void init(Context context) {
+        this.context=context;
         MAPSIZE=4;
         map=new int[MAPSIZE*MAPSIZE];
         isfirstAppear=new boolean[MAPSIZE*MAPSIZE];
@@ -199,10 +209,26 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(state==GAME_OVER){
-            System.out.println("游戏结束");
+            showNormalDialog("游戏结束","");
+        }else if(state==GAME_WIN){
+            showNormalDialog("游戏胜利","");
         }
     }
-
+    private void showNormalDialog(String title,String msg){
+        final AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(context);
+        normalDialog.setTitle(title);
+        normalDialog.setMessage(msg);
+        normalDialog.setPositiveButton("确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ((Activity)context).finish();
+                    }
+                });
+        // 显示
+        normalDialog.show();
+    }
     public int getScore() {
         return score;
     }

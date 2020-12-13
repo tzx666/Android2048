@@ -27,6 +27,10 @@ class BaseMenu : BaseActivity() {
             val intent= Intent(this,MainActivity::class.java)
             startActivity(intent)
         }
+        button_self.setOnClickListener {
+            val intent= Intent(this,customSelect::class.java)
+            startActivity(intent)
+        }
         button_about.setOnClickListener {
             val intent= Intent(this,About::class.java)
             startActivity(intent)
