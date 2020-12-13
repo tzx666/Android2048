@@ -41,7 +41,7 @@
     android:layout_marginBottom="12dp"
     android:text="请按按级别从高到底依次进行自定义\n例如：斗之气、斗者、斗师、大斗师等等"/>
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/s2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -51,7 +51,7 @@
                 android:text="斗者" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/s4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -61,7 +61,7 @@
                 android:text="斗师" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName5"
+                android:id="@+id/s8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -71,7 +71,7 @@
                 android:text="大斗师" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName9"
+                android:id="@+id/s16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -81,7 +81,7 @@
                 android:text="斗灵" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName4"
+                android:id="@+id/s32"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -91,7 +91,7 @@
                 android:text="斗王" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName8"
+                android:id="@+id/s64"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -101,7 +101,7 @@
                 android:text="斗皇" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName7"
+                android:id="@+id/s128"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -111,7 +111,7 @@
                 android:text="斗宗" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName6"
+                android:id="@+id/s256"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -121,7 +121,7 @@
                 android:text="斗尊" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName3"
+                android:id="@+id/s512"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -131,7 +131,7 @@
                 android:text="斗圣" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName10"
+                android:id="@+id/s1024"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -141,7 +141,7 @@
                 android:text="斗帝" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName11"
+                android:id="@+id/s2048"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -151,7 +151,7 @@
                 android:text="作者" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/commit"
                 android:backgroundTint="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

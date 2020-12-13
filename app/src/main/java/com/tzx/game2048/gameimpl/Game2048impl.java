@@ -8,6 +8,10 @@ import android.content.DialogInterface;
 import com.tzx.game2048.R;
 import com.tzx.game2048.activities.MainActivity;
 import com.tzx.game2048.gameInterface.Game2048;
+import com.tzx.game2048.util.Callback;
+import com.tzx.game2048.util.UtilsKt;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 /*
@@ -209,25 +213,30 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(state==GAME_OVER){
-            showNormalDialog("游戏结束","");
+            UtilsKt.showDialog(context, "游戏结束", "", new Callback() {
+                @Override
+                public void onConfirm(@NotNull DialogInterface dialog) {
+                    ((Activity)context).finish();
+                }
+
+                @Override
+                public void onCancel(@NotNull DialogInterface dialog) {
+
+                }
+            });
         }else if(state==GAME_WIN){
-            showNormalDialog("游戏胜利","");
+            UtilsKt.showDialog(context, "游戏胜利", "", new Callback() {
+                @Override
+                public void onConfirm(@NotNull DialogInterface dialog) {
+                    ((Activity)context).finish();
+                }
+
+                @Override
+                public void onCancel(@NotNull DialogInterface dialog) {
+
+                }
+            });
         }
-    }
-    private void showNormalDialog(String title,String msg){
-        final AlertDialog.Builder normalDialog =
-                new AlertDialog.Builder(context);
-        normalDialog.setTitle(title);
-        normalDialog.setMessage(msg);
-        normalDialog.setPositiveButton("确定",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ((Activity)context).finish();
-                    }
-                });
-        // 显示
-        normalDialog.show();
     }
     public int getScore() {
         return score;

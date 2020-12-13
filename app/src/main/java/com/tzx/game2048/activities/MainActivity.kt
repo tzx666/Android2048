@@ -28,6 +28,10 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         game= Game2048impl()
         game.init(this)
+        var list=intent.getStringArrayExtra("strs")
+        if(list!=null){
+            str=list.toMutableList()
+        }
         recyclerView=findViewById(R.id.recycleview)
         score=findViewById(R.id.score)
         val layoutManager: CustomGridManager =

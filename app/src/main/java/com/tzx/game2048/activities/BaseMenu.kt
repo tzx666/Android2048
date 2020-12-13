@@ -18,13 +18,16 @@ class BaseMenu : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_menu)
-
         button_classic=findViewById(R.id.classmode)
         button_self=findViewById(R.id.selfmode)
         button_history=findViewById(R.id.savedmode)
         button_about=findViewById(R.id.aboutgame)
         button_classic.setOnClickListener {
             val intent= Intent(this,MainActivity::class.java)
+            startActivity(intent)
+        }
+        button_history.setOnClickListener {
+            val intent= Intent(this,HistoryMode::class.java)
             startActivity(intent)
         }
         button_self.setOnClickListener {

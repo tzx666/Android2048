@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Game2048">
-        <activity android:name=".activities.customSelect"></activity>
+        <activity android:name=".activities.HistoryMode"></activity>
+        <activity android:name=".activities.customSelect" />
         <activity android:name=".activities.About" />
         <activity android:name=".activities.BaseMenu">
             <intent-filter>
