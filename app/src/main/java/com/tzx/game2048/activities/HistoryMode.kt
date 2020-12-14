@@ -35,9 +35,9 @@ class HistoryMode : BaseActivity() {
         }
         historylist.setOnItemClickListener { parent, view, position, id ->
             var mode=list.elementAt(position)
-            var playlist=sf.getStringSet(mode,null)
+            var playlist=sf.getString(mode,"[]")
             intent= Intent(this,MainActivity::class.java)
-            intent.putExtra("strs",playlist?.toTypedArray())
+            intent.putExtra("strs",playlist)
             if(playlist!=null){
                 com.tzx.game2048.util.showNormalDialog(this,"开始游玩","确定开始游玩吗",object:Callback{
                     override fun onConfirm(dialog: DialogInterface) {

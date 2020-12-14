@@ -13,6 +13,7 @@ import com.tzx.game2048.gameimpl.Game2048impl
 import com.tzx.game2048.adapter.GameAdapter
 import com.tzx.game2048.R
 import it.gmariotti.recyclerview.itemanimator.SlideInOutLeftItemAnimator
+import org.json.JSONArray
 import java.util.*
 
 /*
@@ -28,9 +29,13 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         game= Game2048impl()
         game.init(this)
-        var list=intent.getStringArrayExtra("strs")
-        if(list!=null){
-            str=list.toMutableList()
+        var list=intent.getStringExtra("strs")
+        Log.d("TAG6", "onCreate1: "+list)
+        if(list!=null&&!list.equals("")){
+            var json=JSONArray(list)
+            for(i in 0 until json.length()){
+                str[i]=json.getString(i)
+            }
         }
         recyclerView=findViewById(R.id.recycleview)
         score=findViewById(R.id.score)

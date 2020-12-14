@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.tzx.game2048.R
 import com.tzx.game2048.util.Callback
 import com.tzx.game2048.util.showNormalDialog
+import org.json.JSONArray
 
 class customSelect : BaseActivity() {
     private lateinit var s2:EditText
@@ -54,22 +55,23 @@ class customSelect : BaseActivity() {
         s1024=findViewById(R.id.s1024)
         s2048=findViewById(R.id.s2048)
         button=findViewById(R.id.commit)
+        var json=JSONArray()
         button.setOnClickListener {
             if(check()){
-                var list=mutableSetOf<String>()
-                list.add(s2.text.toString())
-                list.add(s4.text.toString())
-                list.add(s8.text.toString())
-                list.add(s16.text.toString())
-                list.add(s32.text.toString())
-                list.add(s64.text.toString())
-                list.add(s128.text.toString())
-                list.add(s256.text.toString())
-                list.add(s512.text.toString())
-                list.add(s1024.text.toString())
-                list.add(s2048.text.toString())
+                json.put(s2.text.toString())
+                json.put(s4.text.toString())
+                json.put(s8.text.toString())
+                json.put(s16.text.toString())
+                json.put(s32.text.toString())
+                json.put(s64.text.toString())
+                json.put(s128.text.toString())
+                json.put(s256.text.toString())
+                json.put(s512.text.toString())
+                json.put(s1024.text.toString())
+                json.put(s2048.text.toString())
+                Log.d("TAG6", "onCreate: "+json.toString())
                 var intent=Intent(this,MainActivity::class.java)
-                intent.putExtra("strs",list.toTypedArray())
+                intent.putExtra("strs",json.toString())
                 showNormalDialog(this,"提示","是否保存此项设定？", object:Callback{
                     override fun onConfirm(dialog: DialogInterface) {
                         var sf=getSharedPreferences("data", Context.MODE_PRIVATE)
@@ -77,12 +79,12 @@ class customSelect : BaseActivity() {
                         if(list1==null){
                             Log.d("TAG6", "onConfirm: 777")
                             list1= mutableSetOf(s2.text.toString())
-                            sf.edit().putStringSet(s2.text.toString(),list).apply()
+                            sf.edit().putString(s2.text.toString(),json.toString()).apply()
                             sf.edit().putStringSet("sheding",list1).apply()
                         }else{
                             Log.d("TAG6", "onConfirm: 666")
                             list1.add(s2.text.toString())
-                            sf.edit().putStringSet(s2.text.toString(),list).apply()
+                            sf.edit().putString(s2.text.toString(),json.toString()).apply()
                             sf.edit().putStringSet("sheding",list1).apply()
                         }
                         startActivity(intent)
