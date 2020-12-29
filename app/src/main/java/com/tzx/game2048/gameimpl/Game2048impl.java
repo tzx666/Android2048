@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 
 import com.tzx.game2048.R;
 import com.tzx.game2048.activities.MainActivity;
+import com.tzx.game2048.adapter.GameAdapter;
 import com.tzx.game2048.gameInterface.Game2048;
 import com.tzx.game2048.util.Callback;
 import com.tzx.game2048.util.UtilsKt;
@@ -22,17 +23,25 @@ public class Game2048impl implements Game2048 {
     private  int score;
     private  int[] map;
     private boolean[] isfirstAppear;
+    private boolean[] ismerged;
     private  int MAPSIZE;
     private int GAME_OVER=101;
     private int GAME_WIN=102;
     private int GAME_CONTINUE=103;
     private int state=GAME_CONTINUE;
+    private GameAdapter adapter;
     private Context context;
+
+    public void setAdapter(GameAdapter adapter) {
+        this.adapter = adapter;
+    }
+
     @Override
     public void init(Context context,int size) {
         MAPSIZE=size;
         this.context=context;
         map=new int[MAPSIZE*MAPSIZE];
+        ismerged=new boolean[MAPSIZE*MAPSIZE];
         isfirstAppear=new boolean[MAPSIZE*MAPSIZE];
         addRanrom();
         addRanrom();
@@ -51,6 +60,7 @@ public class Game2048impl implements Game2048 {
         this.context=context;
         MAPSIZE=4;
         map=new int[MAPSIZE*MAPSIZE];
+        ismerged=new boolean[MAPSIZE*MAPSIZE];
         isfirstAppear=new boolean[MAPSIZE*MAPSIZE];
         addRanrom();
         addRanrom();
@@ -60,7 +70,35 @@ public class Game2048impl implements Game2048 {
     public void start() {
 
     }
+    private boolean updateDataset(){
+        if(adapter==null){
+            throw new IllegalStateException();
+        }
+        try{
+            //检测新合并的播放合并动画
+            for(int i=0;i<isfirstAppear.length;i++){
+                /*if(isfirstAppear[i]){
+                   // adapter.notifyItemChanged(i, "share");
+                    adapter.notifyItemChanged(i);
+                }
+                if(ismerged[i]){
+                   // adapter.notifyItemChanged(i, "share");
+                    adapter.notifyItemChanged(i);
+                }*/
+                adapter.notifyItemChanged(i);
+            }
+            // 播放结束，开始清屏
+            for(int i=0;i<isfirstAppear.length;i++) {
+                isfirstAppear[i] = false;
+                isfirstAppear[i]=false;
+                // 全部动画播放完毕后，更新棋盘
+               // adapter.notifyDataSetChanged();
+            }
+        }catch (Exception e){
 
+        }
+        return true;
+    }
     public int[] getMap() {
         return map;
     }
@@ -75,12 +113,14 @@ public class Game2048impl implements Game2048 {
                         if(map[i*MAPSIZE+j]==0){
                             map[i*MAPSIZE+j]=map[i*MAPSIZE+z];
                             map[i*MAPSIZE+z]=0;
+                            ismerged[i*MAPSIZE+j]=true;
                             j--;
                             merge=true;
                         }else if(map[i*MAPSIZE+j]==map[i*MAPSIZE+z]){
                             map[i*MAPSIZE+j]*=2;
                             score+=map[i*MAPSIZE+j];
                             map[i*MAPSIZE+z]=0;
+                            ismerged[i*MAPSIZE+j]=true;
                             merge=true;
                         }
                         break;
@@ -89,8 +129,9 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(merge){
-            for(int i=0;i<isfirstAppear.length;i++)isfirstAppear[i]=false;
+            /*开始走合并动画播放流程*/
             addRanrom();
+            updateDataset();
             isEnd();
         }
     }
@@ -105,12 +146,14 @@ public class Game2048impl implements Game2048 {
                         if(map[i*MAPSIZE+j]==0){
                             map[i*MAPSIZE+j]=map[i*MAPSIZE+z];
                             map[i*MAPSIZE+z]=0;
+                            ismerged[i*MAPSIZE+j]=true;
                             j++;
                             merge=true;
                         }else if(map[i*MAPSIZE+j]==map[i*MAPSIZE+z]){
                             map[i*MAPSIZE+j]*=2;
                             map[i*MAPSIZE+z]=0;
                             score+=map[i*MAPSIZE+j];
+                            ismerged[i*MAPSIZE+j]=true;
                             merge=true;
                         }
                         break;
@@ -119,8 +162,8 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(merge){
-            for(int i=0;i<isfirstAppear.length;i++)isfirstAppear[i]=false;
             addRanrom();
+            updateDataset();
             isEnd();
         }
     }
@@ -135,12 +178,14 @@ public class Game2048impl implements Game2048 {
                         if(map[i*MAPSIZE+j]==0){
                             map[i*MAPSIZE+j]=map[z*MAPSIZE+j];
                             map[z*MAPSIZE+j]=0;
+                            ismerged[i*MAPSIZE+j]=true;
                             i--;
                             merge=true;
                         }else if(map[i*MAPSIZE+j]==map[z*MAPSIZE+j]){
                             map[i*MAPSIZE+j]*=2;
                             score+=map[i*MAPSIZE+j];
                             map[z*MAPSIZE+j]=0;
+                            ismerged[i*MAPSIZE+j]=true;
                             merge=true;
                         }
                         break;
@@ -149,8 +194,8 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(merge){
-            for(int i=0;i<isfirstAppear.length;i++)isfirstAppear[i]=false;
             addRanrom();
+            updateDataset();
             isEnd();
         }
     }
@@ -165,12 +210,14 @@ public class Game2048impl implements Game2048 {
                         if(map[i*MAPSIZE+j]==0){
                             map[i*MAPSIZE+j]=map[z*MAPSIZE+j];
                             map[z*MAPSIZE+j]=0;
+                            ismerged[i*MAPSIZE+j]=true;
                             i++;
                             merge=true;
                         }else if(map[i*MAPSIZE+j]==map[z*MAPSIZE+j]){
                             map[i*MAPSIZE+j]*=2;
                             score+=map[i*MAPSIZE+j];
                             map[z*MAPSIZE+j]=0;
+                            ismerged[i*MAPSIZE+j]=true;
                             merge=true;
                         }
                         break;
@@ -179,8 +226,8 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(merge){
-            for(int i=0;i<isfirstAppear.length;i++)isfirstAppear[i]=false;
             addRanrom();
+            updateDataset();
             isEnd();
         }
     }
@@ -245,10 +292,11 @@ public class Game2048impl implements Game2048 {
     public void setScore(int score) {
         this.score = score;
     }
+    /*
     void Gesture(int c){
         if(c==1) moveleft();		//getKeyCode()是表示按键按下的序号，KeyEvent.VK_UP表示up（下）键的序号
         if(c==2) moveright();
         if(c==3) moveup();
         if(c==4) movedown();
-    }
+    }*/
 }

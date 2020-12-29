@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.gyf.immersionbar.ImmersionBar
 import com.gyf.immersionbar.ktx.immersionBar
@@ -38,6 +39,12 @@ class MainActivity : BaseActivity() {
             }
         }
         recyclerView=findViewById(R.id.recycleview)
+        var itemAnimator=DefaultItemAnimator()
+        itemAnimator.addDuration=200
+        itemAnimator.changeDuration=200
+        itemAnimator.moveDuration=200
+        itemAnimator.removeDuration=200
+        recyclerView.itemAnimator=itemAnimator
         score=findViewById(R.id.score)
         val layoutManager: CustomGridManager =
             CustomGridManager(this, 4)
@@ -49,8 +56,8 @@ class MainActivity : BaseActivity() {
             game.map,
             str.toTypedArray()
         )
+        game.setAdapter(adapter)
         recyclerView.adapter=adapter
-        recyclerView.itemAnimator = SlideInOutLeftItemAnimator(recyclerView)
         var startX=0f
         var startY=0f
         var offsetX=0f
@@ -72,24 +79,20 @@ class MainActivity : BaseActivity() {
                         if (offsetX<-5) {
                             Log.d("TAG", "左滑")
                             game.moveleft();
-                            adapter.notifyDataSetChanged()
                             score.text="分数"+game.score.toString()
                         }else if (offsetX>5) {
                             Log.d("TAG", "右滑")
                             game.moveright();
-                            adapter.notifyDataSetChanged()
                             score.text="分数"+game.score.toString()
                         }
                     }else{
                         if (offsetY<-5) {
                             Log.d("TAG", "上滑")
                             game.moveup();
-                            adapter.notifyDataSetChanged()
                             score.text="分数"+game.score.toString()
                         }else if (offsetY>5) {
                             Log.d("TAG", "下滑")
                             game.movedown();
-                            adapter.notifyDataSetChanged()
                             score.text="分数"+game.score.toString()
                         }
                     }
