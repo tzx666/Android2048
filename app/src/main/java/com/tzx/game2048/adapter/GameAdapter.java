@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tzx.commonui.util.UtilsKt;
 import com.tzx.game2048.R;
 
 import java.util.HashMap;
@@ -49,9 +50,10 @@ public class GameAdapter extends RecyclerView.Adapter <GameAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //holder.num.setBackgroundColor(Color.YELLOW);
+        int width=(int)(UtilsKt.getWidth(context)-UtilsKt.dp2px(context,42))/4;
         int numpos=map[position];
-        final ViewHolder recViewHolderLeft = (ViewHolder) holder;
-
+        holder.itemView.getLayoutParams().height=width;
+        holder.itemView.getLayoutParams().width=width;
         switch (numpos){
             case 0: {
                 holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_0));break;

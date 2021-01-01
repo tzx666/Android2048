@@ -6,12 +6,15 @@ import android.view.MotionEvent
 import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
+import com.tzx.commonui.util.dp2px
 import com.tzx.game2048.R
 import com.tzx.game2048.adapter.GameAdapter
 import com.tzx.game2048.customView.CustomGridManager
+import com.tzx.game2048.customView.RecyclerItemDecoration
 import com.tzx.game2048.gameimpl.Game2048impl
 import org.json.JSONArray
 import java.util.*
+
 
 /*
 * 通过拿到的参去判断是否是经典模式,共用游戏规则
@@ -45,7 +48,7 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
             game.map,
             str.toTypedArray()
         )
-
+        recyclerView.addItemDecoration(RecyclerItemDecoration((dp2px(this,10f)).toInt(), (dp2px(this,10f)).toInt(), 4,game.map.size))
         Log.d("TAG", "onCreate: "+game.map.size)
         var animator=DefaultItemAnimator()
         animator.addDuration=10
