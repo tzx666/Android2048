@@ -1,4 +1,4 @@
-package com.tzx.game2048.activities
+package com.tzx.commonui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

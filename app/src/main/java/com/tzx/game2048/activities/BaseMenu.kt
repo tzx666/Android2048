@@ -1,16 +1,11 @@
 package com.tzx.game2048.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.Toolbar
-import com.gyf.immersionbar.ImmersionBar
-import com.gyf.immersionbar.ktx.immersionBar
 import com.tzx.game2048.R
 
-class BaseMenu : BaseActivity() {
+class BaseMenu : com.tzx.commonui.activity.BaseActivity() {
     private lateinit var button_classic:Button
     private lateinit var button_self:Button
     private lateinit var button_history:Button

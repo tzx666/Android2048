@@ -11,11 +11,12 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import com.tzx.game2048.R
-import com.tzx.game2048.util.Callback
+import com.tzx.commonui.util.Callback
+import com.tzx.commonui.util.showNormalDialog
 import java.lang.Exception
 
 
-class HistoryMode : BaseActivity() {
+class HistoryMode : com.tzx.commonui.activity.BaseActivity() {
     private lateinit var historylist:ListView
     private lateinit var view:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +40,49 @@ class HistoryMode : BaseActivity() {
             intent= Intent(this,MainActivity::class.java)
             intent.putExtra("strs",playlist)
             if(playlist!=null){
-                com.tzx.game2048.util.showNormalDialog(this,"开始游玩","确定开始游玩吗",object:Callback{
+                showNormalDialog(
+                    this,
+                    "开始游玩",
+                    "确定开始游玩吗",
+                    object : Callback {
+                        override fun onConfirm(dialog: DialogInterface) {
+                            startActivity(intent)
+                        }
+
+                        override fun onCancel(dialog: DialogInterface) {
+                            dialog.dismiss()
+                        }
+
+                    })
+            }
+        }
+        historylist.setOnItemLongClickListener { parent, view, position, id ->
+            var mode=list.elementAt(position)
+            showNormalDialog(
+                this,
+                "删除",
+                "确定删除吗",
+                object : Callback {
                     override fun onConfirm(dialog: DialogInterface) {
-                        startActivity(intent)
+                        try {
+                            sf.edit().remove(mode).apply()
+                            list.remove(mode)
+                            sf.edit().putStringSet("sheding", list).apply()
+                            historylist.adapter = ArrayAdapter<String>(
+                                this@HistoryMode,
+                                android.R.layout.simple_list_item_1,
+                                list!!.toMutableList()
+                            )
+                            if (list.size == 0) {
+                                view.visibility = View.VISIBLE
+                                historylist.visibility = View.GONE
+                            }
+                            Toast.makeText(this@HistoryMode, "删除成功", Toast.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        } catch (e: Exception) {
+                            Log.d("TAG", "onConfirm: " + e)
+                        }
+
                     }
 
                     override fun onCancel(dialog: DialogInterface) {
@@ -49,34 +90,6 @@ class HistoryMode : BaseActivity() {
                     }
 
                 })
-            }
-        }
-        historylist.setOnItemLongClickListener { parent, view, position, id ->
-            var mode=list.elementAt(position)
-            com.tzx.game2048.util.showNormalDialog(this,"删除","确定删除吗",object:Callback{
-                override fun onConfirm(dialog: DialogInterface) {
-                    try {
-                        sf.edit().remove(mode).apply()
-                        list.remove(mode)
-                        sf.edit().putStringSet("sheding",list).apply()
-                        historylist.adapter=ArrayAdapter<String>(this@HistoryMode,android.R.layout.simple_list_item_1,list!!.toMutableList())
-                        if(list.size==0){
-                            view.visibility= View.VISIBLE
-                            historylist.visibility=View.GONE
-                        }
-                        Toast.makeText(this@HistoryMode,"删除成功",Toast.LENGTH_SHORT).show()
-                        dialog.dismiss()
-                    }catch (e:Exception){
-                        Log.d("TAG", "onConfirm: "+e)
-                    }
-
-                }
-
-                override fun onCancel(dialog: DialogInterface) {
-                    dialog.dismiss()
-                }
-
-            })
             true
         }
     }

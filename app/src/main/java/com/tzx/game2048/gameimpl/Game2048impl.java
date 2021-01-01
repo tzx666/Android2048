@@ -1,18 +1,19 @@
 package com.tzx.game2048.gameimpl;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-import com.tzx.game2048.R;
-import com.tzx.game2048.activities.MainActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+
+import com.tzx.commonui.util.Callback;
+import com.tzx.commonui.util.UtilsKt;
+import com.tzx.game2048.adapter.GameAdapter;
 import com.tzx.game2048.gameInterface.Game2048;
-import com.tzx.game2048.util.Callback;
-import com.tzx.game2048.util.UtilsKt;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Random;
 /*
 *@author tzx
@@ -22,18 +23,42 @@ public class Game2048impl implements Game2048 {
     private  int score;
     private  int[] map;
     private boolean[] isfirstAppear;
+    private boolean[] isMerge;
+    private boolean[] willdisMerge;
+    private GameAdapter adapter;
+    private DefaultItemAnimator animator;
     private  int MAPSIZE;
     private int GAME_OVER=101;
     private int GAME_WIN=102;
     private int GAME_CONTINUE=103;
     private int state=GAME_CONTINUE;
     private Context context;
+
+    public void setAnimator(DefaultItemAnimator animator) {
+        this.animator = animator;
+    }
+
+    public void setAdapter(GameAdapter adapter) {
+        this.adapter = adapter;
+    }
+    public void init(Context context) {
+        MAPSIZE=4;
+        this.context=context;
+        map=new int[MAPSIZE*MAPSIZE];
+        isfirstAppear=new boolean[MAPSIZE*MAPSIZE];
+        isMerge=new boolean[MAPSIZE*MAPSIZE];
+        willdisMerge=new boolean[MAPSIZE*MAPSIZE];
+        addRanrom();
+        addRanrom();
+    }
     @Override
-    public void init(Context context,int size) {
+    public void init(Context context,int size,GameAdapter adapter) {
         MAPSIZE=size;
         this.context=context;
         map=new int[MAPSIZE*MAPSIZE];
         isfirstAppear=new boolean[MAPSIZE*MAPSIZE];
+        isMerge=new boolean[MAPSIZE*MAPSIZE];
+        willdisMerge=new boolean[MAPSIZE*MAPSIZE];
         addRanrom();
         addRanrom();
     }
@@ -47,11 +72,13 @@ public class Game2048impl implements Game2048 {
         GAME_OVER,GAME_CONTINUE,GAME_WIN
     };
     @Override
-    public void init(Context context) {
+    public void init(Context context,GameAdapter adapter) {
         this.context=context;
         MAPSIZE=4;
         map=new int[MAPSIZE*MAPSIZE];
         isfirstAppear=new boolean[MAPSIZE*MAPSIZE];
+        isMerge=new boolean[MAPSIZE*MAPSIZE];
+        willdisMerge=new boolean[MAPSIZE*MAPSIZE];
         addRanrom();
         addRanrom();
     }
@@ -60,11 +87,39 @@ public class Game2048impl implements Game2048 {
     public void start() {
 
     }
-
+    private void clear(){
+        Arrays.fill(isfirstAppear,false);
+        Arrays.fill(isMerge,false);
+        Arrays.fill(willdisMerge,false);
+    }
     public int[] getMap() {
         return map;
     }
-
+    private void showAmination(){
+        //先展示被删除的
+        animator.setChangeDuration(0);
+        for(int i=0;i<MAPSIZE*MAPSIZE;i++){
+            if(!isMerge[i]&&!isfirstAppear[i]){
+                System.out.println(animator.getChangeDuration());
+                System.out.println(i+"数据刷新");
+                adapter.notifyItemChanged(i,i);
+            }
+        }
+        animator.setChangeDuration(100);
+        for(int i=0;i<MAPSIZE*MAPSIZE;i++){
+            if(isMerge[i]){
+                System.out.println(i+"数值变化");
+                adapter.notifyItemChanged(i);
+            }
+        }
+        animator.setChangeDuration(200);
+        for(int i=0;i<MAPSIZE*MAPSIZE;i++){
+            if(isfirstAppear[i]){
+                adapter.notifyItemChanged(i);
+                System.out.println(i+"数据出现");
+            }
+        }
+    }
     @Override
     public void moveleft() {
         boolean merge=false;
@@ -75,12 +130,16 @@ public class Game2048impl implements Game2048 {
                         if(map[i*MAPSIZE+j]==0){
                             map[i*MAPSIZE+j]=map[i*MAPSIZE+z];
                             map[i*MAPSIZE+z]=0;
+                            isMerge[i*MAPSIZE+j]=true;
+                            willdisMerge[i*MAPSIZE+z]=true;
                             j--;
                             merge=true;
                         }else if(map[i*MAPSIZE+j]==map[i*MAPSIZE+z]){
                             map[i*MAPSIZE+j]*=2;
                             score+=map[i*MAPSIZE+j];
                             map[i*MAPSIZE+z]=0;
+                            isMerge[i*MAPSIZE+j]=true;
+                            willdisMerge[i*MAPSIZE+z]=true;
                             merge=true;
                         }
                         break;
@@ -89,8 +148,9 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(merge){
-            for(int i=0;i<isfirstAppear.length;i++)isfirstAppear[i]=false;
             addRanrom();
+            showAmination();
+            clear();
             isEnd();
         }
     }
@@ -105,12 +165,16 @@ public class Game2048impl implements Game2048 {
                         if(map[i*MAPSIZE+j]==0){
                             map[i*MAPSIZE+j]=map[i*MAPSIZE+z];
                             map[i*MAPSIZE+z]=0;
+                            isMerge[i*MAPSIZE+j]=true;
+                            willdisMerge[i*MAPSIZE+z]=true;
                             j++;
                             merge=true;
                         }else if(map[i*MAPSIZE+j]==map[i*MAPSIZE+z]){
                             map[i*MAPSIZE+j]*=2;
                             map[i*MAPSIZE+z]=0;
                             score+=map[i*MAPSIZE+j];
+                            isMerge[i*MAPSIZE+j]=true;
+                            willdisMerge[i*MAPSIZE+z]=true;
                             merge=true;
                         }
                         break;
@@ -119,8 +183,9 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(merge){
-            for(int i=0;i<isfirstAppear.length;i++)isfirstAppear[i]=false;
             addRanrom();
+            showAmination();
+            clear();
             isEnd();
         }
     }
@@ -135,12 +200,16 @@ public class Game2048impl implements Game2048 {
                         if(map[i*MAPSIZE+j]==0){
                             map[i*MAPSIZE+j]=map[z*MAPSIZE+j];
                             map[z*MAPSIZE+j]=0;
+                            isMerge[i*MAPSIZE+j]=true;
+                            willdisMerge[i*MAPSIZE+z]=true;
                             i--;
                             merge=true;
                         }else if(map[i*MAPSIZE+j]==map[z*MAPSIZE+j]){
                             map[i*MAPSIZE+j]*=2;
                             score+=map[i*MAPSIZE+j];
                             map[z*MAPSIZE+j]=0;
+                            isMerge[i*MAPSIZE+j]=true;
+                            willdisMerge[i*MAPSIZE+z]=true;
                             merge=true;
                         }
                         break;
@@ -149,8 +218,9 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(merge){
-            for(int i=0;i<isfirstAppear.length;i++)isfirstAppear[i]=false;
             addRanrom();
+            showAmination();
+            clear();
             isEnd();
         }
     }
@@ -165,12 +235,16 @@ public class Game2048impl implements Game2048 {
                         if(map[i*MAPSIZE+j]==0){
                             map[i*MAPSIZE+j]=map[z*MAPSIZE+j];
                             map[z*MAPSIZE+j]=0;
+                            isMerge[i*MAPSIZE+j]=true;
+                            willdisMerge[i*MAPSIZE+z]=true;
                             i++;
                             merge=true;
                         }else if(map[i*MAPSIZE+j]==map[z*MAPSIZE+j]){
                             map[i*MAPSIZE+j]*=2;
                             score+=map[i*MAPSIZE+j];
                             map[z*MAPSIZE+j]=0;
+                            isMerge[i*MAPSIZE+j]=true;
+                            willdisMerge[i*MAPSIZE+z]=true;
                             merge=true;
                         }
                         break;
@@ -179,8 +253,9 @@ public class Game2048impl implements Game2048 {
             }
         }
         if(merge){
-            for(int i=0;i<isfirstAppear.length;i++)isfirstAppear[i]=false;
             addRanrom();
+            showAmination();
+            clear();
             isEnd();
         }
     }

@@ -1,4 +1,4 @@
-package com.tzx.game2048.util
+package com.tzx.commonui.util
 
 import android.app.AlertDialog
 import android.content.Context

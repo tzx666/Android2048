@@ -68,7 +68,7 @@ public class GameAdapter extends RecyclerView.Adapter <GameAdapter.ViewHolder>{
             case 512:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_512));break;
             case 1024:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_1024));break;
             case 2048:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_2048));break;
-            case 128:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_2048));break;
+            case 128:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_128));break;
             default:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_d));break;
         }
         holder.num.setText(map[position]!=0?String.valueOf(hashMap.get(map[position])):"");
@@ -76,7 +76,34 @@ public class GameAdapter extends RecyclerView.Adapter <GameAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull GameAdapter.ViewHolder holder, int position, @NonNull List<Object> payloads) {
-        super.onBindViewHolder(holder, position, payloads);
+        if (payloads == null || payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            int numpos=map[position];
+            final ViewHolder recViewHolderLeft = (ViewHolder) holder;
+
+            switch (numpos){
+                case 0: {
+                    holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_0));break;
+                }
+                case 2: {
+                    holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_2));break;
+                }
+                case 4:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_4));break;
+                case 8:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_8));break;
+                case 16:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_16));break;
+                case 32:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_32));break;
+                case 64:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_64));break;
+                case 256:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_256));break;
+                case 512:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_512));break;
+                case 1024:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_1024));break;
+                case 2048:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_2048));break;
+                case 128:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_128));break;
+                default:holder.num.setBackground(context.getResources().getDrawable(R.drawable.border_d));break;
+            }
+            holder.num.setText(map[position]!=0?String.valueOf(hashMap.get(map[position])):"");
+            //change item
+        }
     }
 
     @Override

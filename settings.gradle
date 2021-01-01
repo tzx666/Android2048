@@ -1,2 +1,3 @@
+include ':CommonUI'
 include ':app'
 rootProject.name = "Game2048"

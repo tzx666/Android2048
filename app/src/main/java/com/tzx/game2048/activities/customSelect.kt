@@ -8,12 +8,12 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.tzx.commonui.util.Callback
+import com.tzx.commonui.util.showNormalDialog
 import com.tzx.game2048.R
-import com.tzx.game2048.util.Callback
-import com.tzx.game2048.util.showNormalDialog
 import org.json.JSONArray
 
-class customSelect : BaseActivity() {
+class customSelect : com.tzx.commonui.activity.BaseActivity() {
     private lateinit var s2:EditText
     private lateinit var s4:EditText
     private lateinit var s8:EditText
@@ -72,28 +72,32 @@ class customSelect : BaseActivity() {
                 Log.d("TAG6", "onCreate: "+json.toString())
                 var intent=Intent(this,MainActivity::class.java)
                 intent.putExtra("strs",json.toString())
-                showNormalDialog(this,"提示","是否保存此项设定？", object:Callback{
-                    override fun onConfirm(dialog: DialogInterface) {
-                        var sf=getSharedPreferences("data", Context.MODE_PRIVATE)
-                        var list1=sf.getStringSet("sheding",null)
-                        if(list1==null){
-                            Log.d("TAG6", "onConfirm: 777")
-                            list1= mutableSetOf(s2.text.toString())
-                            sf.edit().putString(s2.text.toString(),json.toString()).apply()
-                            sf.edit().putStringSet("sheding",list1).apply()
-                        }else{
-                            Log.d("TAG6", "onConfirm: 666")
-                            list1.add(s2.text.toString())
-                            sf.edit().putString(s2.text.toString(),json.toString()).apply()
-                            sf.edit().putStringSet("sheding",list1).apply()
+                showNormalDialog(
+                    this,
+                    "提示",
+                    "是否保存此项设定？",
+                    object : Callback {
+                        override fun onConfirm(dialog: DialogInterface) {
+                            var sf = getSharedPreferences("data", Context.MODE_PRIVATE)
+                            var list1 = sf.getStringSet("sheding", null)
+                            if (list1 == null) {
+                                Log.d("TAG6", "onConfirm: 777")
+                                list1 = mutableSetOf(s2.text.toString())
+                                sf.edit().putString(s2.text.toString(), json.toString()).apply()
+                                sf.edit().putStringSet("sheding", list1).apply()
+                            } else {
+                                Log.d("TAG6", "onConfirm: 666")
+                                list1.add(s2.text.toString())
+                                sf.edit().putString(s2.text.toString(), json.toString()).apply()
+                                sf.edit().putStringSet("sheding", list1).apply()
+                            }
+                            startActivity(intent)
                         }
-                        startActivity(intent)
-                    }
 
-                    override fun onCancel(dialog: DialogInterface) {
-                        startActivity(intent)
-                    }
-                })
+                        override fun onCancel(dialog: DialogInterface) {
+                            startActivity(intent)
+                        }
+                    })
             }else{
                 Toast.makeText(this,"输入格式错误",Toast.LENGTH_SHORT).show()
             }

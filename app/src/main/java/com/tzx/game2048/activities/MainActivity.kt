@@ -4,22 +4,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
-import com.gyf.immersionbar.ImmersionBar
-import com.gyf.immersionbar.ktx.immersionBar
+import com.tzx.game2048.R
+import com.tzx.game2048.adapter.GameAdapter
 import com.tzx.game2048.customView.CustomGridManager
 import com.tzx.game2048.gameimpl.Game2048impl
-import com.tzx.game2048.adapter.GameAdapter
-import com.tzx.game2048.R
-import it.gmariotti.recyclerview.itemanimator.SlideInOutLeftItemAnimator
 import org.json.JSONArray
 import java.util.*
 
 /*
 * 通过拿到的参去判断是否是经典模式,共用游戏规则
 * */
-class MainActivity : BaseActivity() {
+class MainActivity : com.tzx.commonui.activity.BaseActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var score:TextView
     private lateinit var  game: Game2048impl
@@ -28,9 +25,8 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         game= Game2048impl()
-        game.init(this)
+
         var list=intent.getStringExtra("strs")
-        Log.d("TAG6", "onCreate1: "+list)
         if(list!=null&&!list.equals("")){
             var json=JSONArray(list)
             for(i in 0 until json.length()){
@@ -43,20 +39,31 @@ class MainActivity : BaseActivity() {
             CustomGridManager(this, 4)
         layoutManager.setScrollEnabled(false)
         recyclerView.setLayoutManager(layoutManager)
-        Log.d("TAG", "onCreate: "+game.map.size)
+        game.init(this)
         var adapter= GameAdapter(
             this,
             game.map,
             str.toTypedArray()
         )
+
+        Log.d("TAG", "onCreate: "+game.map.size)
+        var animator=DefaultItemAnimator()
+        animator.addDuration=10
+        animator.changeDuration=200
+        animator.moveDuration=200
+        animator.removeDuration=10
+        recyclerView.itemAnimator = animator
         recyclerView.adapter=adapter
-        recyclerView.itemAnimator = SlideInOutLeftItemAnimator(recyclerView)
+        game.setAdapter(adapter)
+        game.setAnimator(animator)
         var startX=0f
         var startY=0f
         var offsetX=0f
         var offsetY=0f
         recyclerView.setOnTouchListener { v, event ->
-
+            if(animator.isRunning()) {
+                true
+            }
             when(event.action){
                 MotionEvent.ACTION_DOWN ->{
                     startX = event.getX();
@@ -72,24 +79,20 @@ class MainActivity : BaseActivity() {
                         if (offsetX<-5) {
                             Log.d("TAG", "左滑")
                             game.moveleft();
-                            adapter.notifyDataSetChanged()
                             score.text="分数"+game.score.toString()
                         }else if (offsetX>5) {
                             Log.d("TAG", "右滑")
                             game.moveright();
-                            adapter.notifyDataSetChanged()
                             score.text="分数"+game.score.toString()
                         }
                     }else{
                         if (offsetY<-5) {
                             Log.d("TAG", "上滑")
                             game.moveup();
-                            adapter.notifyDataSetChanged()
                             score.text="分数"+game.score.toString()
                         }else if (offsetY>5) {
                             Log.d("TAG", "下滑")
                             game.movedown();
-                            adapter.notifyDataSetChanged()
                             score.text="分数"+game.score.toString()
                         }
                     }

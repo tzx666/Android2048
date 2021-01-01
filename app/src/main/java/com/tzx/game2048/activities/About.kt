@@ -2,14 +2,10 @@ package com.tzx.game2048.activities
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import com.gyf.immersionbar.ImmersionBar
-import com.gyf.immersionbar.ktx.immersionBar
-import com.tzx.game2048.R
 import mehdi.sakout.aboutpage.AboutPage
 
 
-class About : BaseActivity() {
+class About : com.tzx.commonui.activity.BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val aboutPage: View = AboutPage(this)
