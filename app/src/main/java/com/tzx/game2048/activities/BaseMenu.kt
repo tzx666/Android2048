@@ -2,7 +2,6 @@ package com.tzx.game2048.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import com.tzx.game2048.R
 
@@ -34,6 +33,5 @@ class BaseMenu : com.tzx.commonui.activity.BaseActivity() {
             val intent= Intent(this,About::class.java)
             startActivity(intent)
         }
-        Log.d("TAG", "onCreate: ")
     }
 }
