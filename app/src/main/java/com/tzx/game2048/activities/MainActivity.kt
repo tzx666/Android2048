@@ -1,7 +1,9 @@
 package com.tzx.game2048.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -30,12 +32,14 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
     private lateinit var highestScoreHighestView: ScoreHighestView
     private lateinit var back:Button
     private lateinit var restart:Button
+    private var maxsocre="0"
+    private lateinit var sf: SharedPreferences
     var str= Arrays.asList("2","4","8","16","32","64","128","256","512","1024","2048")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         game= Game2048impl()
-
+        sf = getSharedPreferences("data", Context.MODE_PRIVATE)
         var list=intent.getStringExtra("strs")
         if(list!=null&&!list.equals("")){
             var json=JSONArray(list)
@@ -43,6 +47,8 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
                 str[i]=json.getString(i)
             }
         }
+        maxsocre= sf.getString("maxscore","0").toString()
+
         recyclerView=findViewById(R.id.recycleview)
         score=findViewById(R.id.scoreView)
         back=findViewById(R.id.button)
@@ -54,7 +60,11 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
             restartActivity(this)
         }
         highestScoreHighestView=findViewById(R.id.scoreHighestView)
-        highestScoreHighestView.setScore("0")
+        if(maxsocre!=null){
+            highestScoreHighestView.setScore(maxsocre)
+        }else{
+            highestScoreHighestView.setScore("0")
+        }
         val layoutManager: CustomGridManager =
             CustomGridManager(this, 4)
         layoutManager.setScrollEnabled(false)
@@ -100,20 +110,24 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
                             Log.d("TAG", "左滑")
                             game.moveleft();
                             score.setScore(game.score.toString())
+                            checkUpdate()
                         }else if (offsetX>5) {
                             Log.d("TAG", "右滑")
                             game.moveright();
                             score.setScore(game.score.toString())
+                            checkUpdate()
                         }
                     }else{
                         if (offsetY<-5) {
                             Log.d("TAG", "上滑")
                             game.moveup();
                             score.setScore(game.score.toString())
+                            checkUpdate()
                         }else if (offsetY>5) {
                             Log.d("TAG", "下滑")
                             game.movedown();
                             score.setScore(game.score.toString())
+                            checkUpdate()
                         }
                     }
                     true
@@ -129,5 +143,11 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
         activity.startActivity(intent)
         activity.overridePendingTransition(0, 0)
         activity.finish()
+    }
+    fun checkUpdate(){
+        if(maxsocre.toInt()<game.score){
+            highestScoreHighestView.setScore(game.score.toString())
+            sf.edit().putString("maxscore",game.score.toString()).apply()
+        }
     }
 }
