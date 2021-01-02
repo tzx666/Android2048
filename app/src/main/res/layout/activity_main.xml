@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="72dp"
         android:layout_marginRight="3dp"
         android:background="@drawable/border_rec"
         android:paddingLeft="3dp"
@@ -23,15 +23,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <TextView
-        android:id="@+id/score"
-        android:layout_width="wrap_content"
+    <com.tzx.game2048.View.ScoreView
+        android:id="@+id/scoreView"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="48dp"
-        android:text="分数：0"
-        android:textSize="18sp"
+        android:background="@drawable/border_score"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.tzx.game2048.View.ScoreHighestView
+        android:id="@+id/scoreHighestView"
+        android:layout_width="100dp"
+        android:background="@drawable/border_score"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toEndOf="@+id/scoreView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -43,5 +52,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/topoc" />
+
+    <Button
+        android:id="@+id/button"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="返回菜单"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/scoreView" />
+
+    <Button
+        android:id="@+id/button2"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="重新开始"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/scoreHighestView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

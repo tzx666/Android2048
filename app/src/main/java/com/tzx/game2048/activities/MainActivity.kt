@@ -1,13 +1,19 @@
 package com.tzx.game2048.activities
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
-import android.widget.TextView
+import android.widget.Button
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.tzx.commonui.util.dp2px
 import com.tzx.game2048.R
+import com.tzx.game2048.View.ScoreHighestView
+import com.tzx.game2048.View.ScoreView
 import com.tzx.game2048.adapter.GameAdapter
 import com.tzx.game2048.customView.CustomGridManager
 import com.tzx.game2048.customView.RecyclerItemDecoration
@@ -21,14 +27,19 @@ import java.util.*
 * */
 class MainActivity : com.tzx.commonui.activity.BaseActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var score:TextView
+    private lateinit var score:ScoreView
     private lateinit var  game: Game2048impl
+    private lateinit var highestScoreHighestView: ScoreHighestView
+    private lateinit var back:Button
+    private lateinit var restart:Button
+    private var maxsocre="0"
+    private lateinit var sf: SharedPreferences
     var str= Arrays.asList("2","4","8","16","32","64","128","256","512","1024","2048")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         game= Game2048impl()
-
+        sf = getSharedPreferences("data", Context.MODE_PRIVATE)
         var list=intent.getStringExtra("strs")
         if(list!=null&&!list.equals("")){
             var json=JSONArray(list)
@@ -36,8 +47,24 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
                 str[i]=json.getString(i)
             }
         }
+        maxsocre= sf.getString("maxscore","0").toString()
+
         recyclerView=findViewById(R.id.recycleview)
-        score=findViewById(R.id.score)
+        score=findViewById(R.id.scoreView)
+        back=findViewById(R.id.button)
+        restart=findViewById(R.id.button2)
+        back.setOnClickListener {
+            finish()
+        }
+        restart.setOnClickListener {
+            restartActivity(this)
+        }
+        highestScoreHighestView=findViewById(R.id.scoreHighestView)
+        if(maxsocre!=null){
+            highestScoreHighestView.setScore(maxsocre)
+        }else{
+            highestScoreHighestView.setScore("0")
+        }
         val layoutManager: CustomGridManager =
             CustomGridManager(this, 4)
         layoutManager.setScrollEnabled(false)
@@ -82,21 +109,25 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
                         if (offsetX<-5) {
                             Log.d("TAG", "左滑")
                             game.moveleft();
-                            score.text="分数"+game.score.toString()
+                            score.setScore(game.score.toString())
+                            checkUpdate()
                         }else if (offsetX>5) {
                             Log.d("TAG", "右滑")
                             game.moveright();
-                            score.text="分数"+game.score.toString()
+                            score.setScore(game.score.toString())
+                            checkUpdate()
                         }
                     }else{
                         if (offsetY<-5) {
                             Log.d("TAG", "上滑")
                             game.moveup();
-                            score.text="分数"+game.score.toString()
+                            score.setScore(game.score.toString())
+                            checkUpdate()
                         }else if (offsetY>5) {
                             Log.d("TAG", "下滑")
                             game.movedown();
-                            score.text="分数"+game.score.toString()
+                            score.setScore(game.score.toString())
+                            checkUpdate()
                         }
                     }
                     true
@@ -104,6 +135,19 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
                 else -> false
             }
 
+        }
+    }
+    fun restartActivity(activity: Activity) {
+        val intent = Intent()
+        intent.setClass(activity, activity.javaClass)
+        activity.startActivity(intent)
+        activity.overridePendingTransition(0, 0)
+        activity.finish()
+    }
+    fun checkUpdate(){
+        if(maxsocre.toInt()<game.score){
+            highestScoreHighestView.setScore(game.score.toString())
+            sf.edit().putString("maxscore",game.score.toString()).apply()
         }
     }
 }
