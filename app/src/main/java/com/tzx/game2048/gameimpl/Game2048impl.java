@@ -3,8 +3,10 @@ package com.tzx.game2048.gameimpl;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tzx.commonui.util.Callback;
 import com.tzx.commonui.util.UtilsKt;
@@ -33,7 +35,7 @@ public class Game2048impl implements Game2048 {
     private int GAME_CONTINUE=103;
     private int state=GAME_CONTINUE;
     private Context context;
-
+    private RecyclerView recyclerView;
     public void setAnimator(DefaultItemAnimator animator) {
         this.animator = animator;
     }
@@ -41,8 +43,9 @@ public class Game2048impl implements Game2048 {
     public void setAdapter(GameAdapter adapter) {
         this.adapter = adapter;
     }
-    public void init(Context context) {
+    public void init(Context context, RecyclerView recyclerView) {
         MAPSIZE=4;
+        this.recyclerView=recyclerView;
         this.context=context;
         map=new int[MAPSIZE*MAPSIZE];
         isfirstAppear=new boolean[MAPSIZE*MAPSIZE];
@@ -97,26 +100,15 @@ public class Game2048impl implements Game2048 {
     }
     private void showAmination(){
         //先展示被删除的
-        animator.setChangeDuration(0);
-        for(int i=0;i<MAPSIZE*MAPSIZE;i++){
-            if(!isMerge[i]&&!isfirstAppear[i]){
-                System.out.println(animator.getChangeDuration());
-                System.out.println(i+"数据刷新");
-                adapter.notifyItemChanged(i,i);
-            }
-        }
-        animator.setChangeDuration(100);
         for(int i=0;i<MAPSIZE*MAPSIZE;i++){
             if(isMerge[i]){
-                System.out.println(i+"数值变化");
-                adapter.notifyItemChanged(i);
-            }
-        }
-        animator.setChangeDuration(200);
-        for(int i=0;i<MAPSIZE*MAPSIZE;i++){
-            if(isfirstAppear[i]){
-                adapter.notifyItemChanged(i);
-                System.out.println(i+"数据出现");
+                Log.d("TAG", "showAminationisMerge: "+i);
+                adapter.notifyItemChanged(i,"change");
+            }else if(isfirstAppear[i]){
+                Log.d("TAG", "showAminationisfirstAppear: "+i);
+                adapter.notifyItemChanged(i,"appear");
+            }else{
+                adapter.notifyItemChanged(i,"");
             }
         }
     }
