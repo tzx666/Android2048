@@ -1,6 +1,8 @@
 package com.tzx.game2048.adapter;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,7 @@ public class GameAdapter extends RecyclerView.Adapter <GameAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //holder.num.setBackgroundColor(Color.YELLOW);
+        holder.itemView.setTag(position);
         int width=(int)(UtilsKt.getWidth(context)-UtilsKt.dp2px(context,42))/4;
         int numpos=map[position];
         holder.itemView.getLayoutParams().height=width;
@@ -80,7 +83,9 @@ public class GameAdapter extends RecyclerView.Adapter <GameAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull GameAdapter.ViewHolder holder, int position, @NonNull List<Object> payloads) {
         if (payloads == null || payloads.isEmpty()) {
             onBindViewHolder(holder, position);
+            Log.d("TAG", "onBindViewHolder: 555");
         } else {
+            Log.d("TAG", "onBindViewHolder: "+payloads.toString());
             int numpos=map[position];
             final ViewHolder recViewHolderLeft = (ViewHolder) holder;
 
@@ -105,6 +110,18 @@ public class GameAdapter extends RecyclerView.Adapter <GameAdapter.ViewHolder>{
             }
             holder.num.setText(map[position]!=0?String.valueOf(hashMap.get(map[position])):"");
             //change item
+            if(payloads.get(0).equals("change")){
+                Log.d("TAG", "onBindViewHolder: 666");
+                ObjectAnimator animator = ObjectAnimator.ofFloat(holder.itemView, "scaleX", 1f, 1.2f,1f);
+                animator.setDuration(400);
+                animator.start();
+            }else if(payloads.get(0).equals("appear")){
+                Log.d("TAG", "onBindViewHolder: 777");
+                ObjectAnimator animator = ObjectAnimator.ofFloat(holder.itemView, "scaleX", 0f, 1f);
+                animator.setDuration(400);
+                animator.start();
+            }
+
         }
     }
 

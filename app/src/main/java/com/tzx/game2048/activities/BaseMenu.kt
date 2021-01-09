@@ -10,6 +10,7 @@ class BaseMenu : com.tzx.commonui.activity.BaseActivity() {
     private lateinit var button_self:Button
     private lateinit var button_history:Button
     private lateinit var button_about:Button
+    private lateinit var button: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_menu)
@@ -17,6 +18,11 @@ class BaseMenu : com.tzx.commonui.activity.BaseActivity() {
         button_self=findViewById(R.id.selfmode)
         button_history=findViewById(R.id.savedmode)
         button_about=findViewById(R.id.aboutgame)
+        button=findViewById(R.id.button3)
+        button.setOnClickListener {
+            val intent= Intent(this,GuanFangMode::class.java)
+            startActivity(intent)
+        }
         button_classic.setOnClickListener {
             val intent= Intent(this,MainActivity::class.java)
             startActivity(intent)

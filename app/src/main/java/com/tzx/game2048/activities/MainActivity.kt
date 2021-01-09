@@ -69,7 +69,8 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
             CustomGridManager(this, 4)
         layoutManager.setScrollEnabled(false)
         recyclerView.setLayoutManager(layoutManager)
-        game.init(this)
+        recyclerView.setItemViewCacheSize(0)
+        game.init(this,recyclerView)
         var adapter= GameAdapter(
             this,
             game.map,
@@ -138,9 +139,14 @@ class MainActivity : com.tzx.commonui.activity.BaseActivity() {
         }
     }
     fun restartActivity(activity: Activity) {
-        val intent = Intent()
-        intent.setClass(activity, activity.javaClass)
-        activity.startActivity(intent)
+        var json= JSONArray()
+        var list= str
+        for(s in list){
+            json.put(s)
+        }
+        var intent= Intent(activity,activity::class.java)
+        intent.putExtra("strs",json.toString())
+        startActivity(intent)
         activity.overridePendingTransition(0, 0)
         activity.finish()
     }
